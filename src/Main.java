@@ -3,7 +3,7 @@ import br.com.projeto.entidades.ModeloDoCarro;
 import br.com.projeto.entidades.Veiculo;
 import br.com.projeto.implementacao.ClienteDaoMap;
 import br.com.projeto.implementacao.VeiculoDaoMap;
-import br.com.projeto.implementacao.builder.SienaDaoMap;
+import br.com.projeto.implementacao.builder.BuilderDaoMap;
 import br.com.projeto.interfaces.IClienteDao;
 import br.com.projeto.interfaces.IVeiculoDao;
 
@@ -15,14 +15,9 @@ public class Main {
         Cliente cliente4 = new Cliente(32165498701L, "Ana Costa", "ana.costa@example.com", "41912345678", null);
         Cliente cliente5 = new Cliente(65412398709L, "Pedro Rocha", "pedro.rocha@example.com", "51987654321", null);
 
-        Veiculo veiculo1 = new SienaDaoMap().criarCarro();
-        Veiculo veiculo2 = new Veiculo(2l,"Celta", ModeloDoCarro.HATCH, "GW", true);
-        Veiculo veiculo3 = new Veiculo(3l,"Uno", ModeloDoCarro.HATCH, "Fiat", true);
-        Veiculo veiculo4 = new Veiculo(4l,"Corsa Classic", ModeloDoCarro.SEDAN, "GW", true);
-        Veiculo veiculo5 = new Veiculo(5l,"SW4", ModeloDoCarro.SUV, "Toyota", true);
-
         IClienteDao iClienteDao = new ClienteDaoMap();
         IVeiculoDao iVeiculoDao = new VeiculoDaoMap();
+        BuilderDaoMap builderDaoMap = new BuilderDaoMap();
 
         iClienteDao.cadastrarT(cliente1);
         iClienteDao.cadastrarT(cliente2);
@@ -30,16 +25,22 @@ public class Main {
         iClienteDao.cadastrarT(cliente4);
         iClienteDao.cadastrarT(cliente5);
 
-        iVeiculoDao.cadastrarT(veiculo1);
-        iVeiculoDao.cadastrarT(veiculo2);
-        iVeiculoDao.cadastrarT(veiculo3);
-        iVeiculoDao.cadastrarT(veiculo4);
-        iVeiculoDao.cadastrarT(veiculo5);
+        iVeiculoDao.cadastrarT(builderDaoMap.criarSiena());
+        iVeiculoDao.cadastrarT(builderDaoMap.criarCelta());
+        iVeiculoDao.cadastrarT(builderDaoMap.criarCorsa());
+        iVeiculoDao.cadastrarT(builderDaoMap.criarUno());
+        iVeiculoDao.cadastrarT(builderDaoMap.criarSw4());
 
         System.out.println(iClienteDao.buscarT(cliente1.getCodigo()));
         System.out.println(iClienteDao.buscarTodosOsTs());
 
-        System.out.println(iVeiculoDao.buscarT(veiculo1.getCodigo()));
+        System.out.println(iVeiculoDao.buscarT(1l));
         System.out.println(iVeiculoDao.buscarTodosOsTs());
+
+
+        Veiculo veiculo = builderDaoMap.criarSiena();
+
+        System.out.println(veiculo);
+
     }
 }

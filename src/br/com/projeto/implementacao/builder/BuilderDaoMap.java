@@ -1,20 +1,28 @@
 package br.com.projeto.implementacao.builder;
 
-import br.com.projeto.entidades.ModeloDoCarro;
 import br.com.projeto.entidades.Veiculo;
-import br.com.projeto.interfaces.builder.IBuilder;
-import br.com.projeto.interfaces.builder.IBuilderGenerico;
+import br.com.projeto.entidades.carros.*;
 
-public abstract class BuilderDaoMap<T extends IBuilder> implements IBuilderGenerico<T> {
+public class BuilderDaoMap {
 
-    private IBuilder iBuilder;
-
-    public BuilderDaoMap(IBuilder iBuilder){
-        this.iBuilder = iBuilder;
+    public Veiculo criarSiena() {
+        return new SienaBuilder().criarCarro();
     }
 
-    @Override
-    public Veiculo builder() {
-        return veiculo;
+    public Veiculo criarUno() {
+        return new UnoBuilder().criarCarro();
     }
+
+    public Veiculo criarSw4() {
+        return new Sw4Builder().criarCarro();
+    }
+
+    public Veiculo criarCelta() {
+        return new CeltaBuilder().criarCarro();
+    }
+
+    public Veiculo criarCorsa() {
+        return new CorsaClassicBuilder().criarCarro();
+    }
+
 }
