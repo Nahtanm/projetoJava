@@ -53,5 +53,7 @@ public class Main {
         System.out.println(iAluguelDao.buscarAluguel(cliente1.getCodigo()));
         System.out.println(iVeiculoDao.buscarT(1l));
 
+        Aplicacao app = new Aplicacao();
+
     }
 }
