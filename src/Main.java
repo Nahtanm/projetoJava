@@ -1,11 +1,14 @@
 import br.com.projeto.entidades.Cliente;
-import br.com.projeto.entidades.ModeloDoCarro;
 import br.com.projeto.entidades.Veiculo;
+import br.com.projeto.implementacao.AluguelDaoMap;
 import br.com.projeto.implementacao.ClienteDaoMap;
 import br.com.projeto.implementacao.VeiculoDaoMap;
 import br.com.projeto.implementacao.builder.BuilderDaoMap;
+import br.com.projeto.interfaces.IAluguelDao;
 import br.com.projeto.interfaces.IClienteDao;
 import br.com.projeto.interfaces.IVeiculoDao;
+
+import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
@@ -41,6 +44,14 @@ public class Main {
         Veiculo veiculo = builderDaoMap.criarSiena();
 
         System.out.println(veiculo);
+
+
+        IAluguelDao iAluguelDao = new AluguelDaoMap();
+
+        iAluguelDao.realizarAluguel(cliente1, iVeiculoDao.buscarT(1l), new Date(), "05/02/2025");
+
+        System.out.println(iAluguelDao.buscarAluguel(cliente1.getCodigo()));
+        System.out.println(iVeiculoDao.buscarT(1l));
 
     }
 }
