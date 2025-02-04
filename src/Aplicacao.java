@@ -1,4 +1,5 @@
 import br.com.projeto.entidades.Cliente;
+import br.com.projeto.entidades.ModeloDoCarro;
 import br.com.projeto.entidades.Veiculo;
 import br.com.projeto.implementacao.ClienteDaoMap;
 import br.com.projeto.implementacao.GenericoDaoMap;
@@ -9,6 +10,8 @@ import br.com.projeto.interfaces.IVeiculoDao;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 public class Aplicacao {
@@ -27,11 +30,11 @@ public class Aplicacao {
     public void menu() {
         JOptionPane.showMessageDialog(null, "BEM VINDO A LOCABOA", "BEM VINDO", JOptionPane.INFORMATION_MESSAGE);
 
-        String opcao = JOptionPane.showInputDialog(null, "1 - CADASTRAR  2 - BUSCAR \n3 - REALIZAR ALUGUEL  4 - VER CARROS DISPONIVEIS", "MENU", JOptionPane.INFORMATION_MESSAGE);
+        String opcao = "0";
 
         while (opcao != "5") {
 
-            opcao = JOptionPane.showInputDialog(null, "1 - CADASTRAR  2 - BUSCAR \n3 - REALIZAR ALUGUEL  4 - VER CARROS DISPONIVEIS", "MENU", JOptionPane.INFORMATION_MESSAGE);
+            opcao = JOptionPane.showInputDialog(null, "1 - CADASTRAR  \n2 - BUSCAR \n3 - REALIZAR ALUGUEL  \n4 - VER CARROS DISPONIVEIS \n5 - SAIR", "MENU", JOptionPane.INFORMATION_MESSAGE);
 
             switch (opcao) {
                 case "1":
@@ -47,7 +50,8 @@ public class Aplicacao {
                     verCarrosDisponiveis();
                     break;
                 case "5":
-
+                    JOptionPane.showMessageDialog(null, "Saindo do aplicativo", "SAINDO", JOptionPane.INFORMATION_MESSAGE);
+                    System.exit(1);
                     break;
 
                 default:
@@ -60,7 +64,13 @@ public class Aplicacao {
     }
 
     private void verCarrosDisponiveis() {
-
+        HashMap<Long, Veiculo> collection = new HashMap<>();
+        for (Veiculo vei : iVeiculoDao.buscarTodosOsTs()) {
+            if (vei.getEstado()) {
+                collection.put(vei.getCodigo(), vei);
+            }
+        }
+        JOptionPane.showMessageDialog(null, collection.values(), "Veiculos disponiveis", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void realizarAluguel() {
@@ -68,30 +78,53 @@ public class Aplicacao {
     }
 
     private void buscar() {
-
-    }
-
-    private void cadastrar() {
         String opcao = opcao();
-        if(opcao.equals("1")){
-            Cliente cliente = cadastrarCliente();
-            iClienteDao.cadastrarT(cliente);
-        }else if(opcao.equals("2")){
+        if (opcao.equals("1")) {
+            String codigo = JOptionPane.showInputDialog(null, "Codigo do cliente", "CONSULTA", JOptionPane.INFORMATION_MESSAGE);
+            Cliente cliente = iClienteDao.buscarT(Long.valueOf(codigo));
+            JOptionPane.showMessageDialog(null, cliente + "\n", "CONSULTA", JOptionPane.INFORMATION_MESSAGE);
 
-        }else{
+        } else if (opcao.equals("2")) {
+            String codigo = JOptionPane.showInputDialog(null, "Codigo do veiculo", "CONSULTA", JOptionPane.INFORMATION_MESSAGE);
+            Veiculo veiculo = iVeiculoDao.buscarT(Long.valueOf(codigo));
+            JOptionPane.showMessageDialog(null, veiculo + "\n", "CONSULTA", JOptionPane.INFORMATION_MESSAGE);
+        } else {
             JOptionPane.showMessageDialog(null, "Opção inválida, tente outra vez!", "Opção inválida", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
-    public String opcao(){
+    private Boolean cadastrar() {
+        String opcao = opcao();
+        if (opcao.equals("1")) {
+            Cliente cliente = cadastrarCliente();
+            if (!iClienteDao.cadastrarT(cliente)) {
+                JOptionPane.showMessageDialog(null, "Veiculo já cadastrado!", "CADASTRO", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
+            iClienteDao.cadastrarT(cliente);
+        } else if (opcao.equals("2")) {
+            Veiculo veiculo = cadastrarVeiculo();
+            if (!iVeiculoDao.cadastrarT(veiculo)) {
+                JOptionPane.showMessageDialog(null, "Veiculo já cadastrado!", "CADASTRO", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
+            iVeiculoDao.cadastrarT(veiculo);
+        } else {
+            JOptionPane.showMessageDialog(null, "Opção inválida, tente outra vez!", "Opção inválida", JOptionPane.INFORMATION_MESSAGE);
+        }
+        JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso", "CADASTRO", JOptionPane.INFORMATION_MESSAGE);
+        return true;
+    }
+
+    public String opcao() {
         String opcao = JOptionPane.showInputDialog(null, "1 - CLIENTE \n2 - VEICULO ", "OPÇÃO", JOptionPane.INFORMATION_MESSAGE);
         return opcao;
     }
 
-    public Cliente cadastrarCliente(){
+    public Cliente cadastrarCliente() {
         String[] listaCliente = {"CPF", "NOME", "EMAIL", "TELEFONE"};
         List<String> strings = new ArrayList<>();
-        for(String str : listaCliente){
+        for (String str : listaCliente) {
             String opcao = JOptionPane.showInputDialog(null, str, "CADASTRO CLIENTE", JOptionPane.INFORMATION_MESSAGE);
             strings.add(opcao);
         }
@@ -99,12 +132,15 @@ public class Aplicacao {
     }
 
     public Veiculo cadastrarVeiculo() {
-        String[] listaVeiculo = {"CODIGO", "NOME", "MODELO", "MARCA"};
+        String[] listaVeiculo = {"CODIGO", "NOME", "MARCA"};
         List<String> strings = new ArrayList<>();
         for (String str : listaVeiculo) {
             String opcao = JOptionPane.showInputDialog(null, str, "CADASTRO VEICULO", JOptionPane.INFORMATION_MESSAGE);
             strings.add(opcao);
         }
-        return new Veiculo() ;
+
+        String opcao = JOptionPane.showInputDialog(null, "MODELO DO CARRO - SUV, HATCH, SEDAN", "CADASTRO VEICULO", JOptionPane.INFORMATION_MESSAGE);
+
+        return new Veiculo(Long.valueOf(strings.get(0)), strings.get(1), ModeloDoCarro.valueOf(opcao), strings.get(2), true);
     }
 }

@@ -43,7 +43,7 @@ public class Veiculo implements Persistence {
                 ", modelo=" + modelo +
                 ", marca='" + marca + '\'' +
                 ", estado=" + estado +
-                '}';
+                "}\n";
     }
 
     public String getNome() {
