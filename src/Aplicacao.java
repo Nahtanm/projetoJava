@@ -1,8 +1,9 @@
+import br.com.projeto.entidades.Aluguel;
 import br.com.projeto.entidades.Cliente;
 import br.com.projeto.entidades.ModeloDoCarro;
 import br.com.projeto.entidades.Veiculo;
+import br.com.projeto.implementacao.AluguelDaoMap;
 import br.com.projeto.implementacao.ClienteDaoMap;
-import br.com.projeto.implementacao.GenericoDaoMap;
 import br.com.projeto.implementacao.VeiculoDaoMap;
 import br.com.projeto.implementacao.builder.BuilderDaoMap;
 import br.com.projeto.interfaces.IClienteDao;
@@ -10,7 +11,6 @@ import br.com.projeto.interfaces.IVeiculoDao;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,11 +19,14 @@ public class Aplicacao {
     private IClienteDao iClienteDao;
     private IVeiculoDao iVeiculoDao;
     private BuilderDaoMap builderDaoMap;
+    private AluguelDaoMap aluguelDaoMap;
 
     public Aplicacao() {
         this.iClienteDao = new ClienteDaoMap();
         this.iVeiculoDao = new VeiculoDaoMap();
         this.builderDaoMap = new BuilderDaoMap();
+        this.aluguelDaoMap = new AluguelDaoMap();
+        teste();
         menu();
     }
 
@@ -34,7 +37,7 @@ public class Aplicacao {
 
         while (opcao != "5") {
 
-            opcao = JOptionPane.showInputDialog(null, "1 - CADASTRAR  \n2 - BUSCAR \n3 - REALIZAR ALUGUEL  \n4 - VER CARROS DISPONIVEIS \n5 - SAIR", "MENU", JOptionPane.INFORMATION_MESSAGE);
+            opcao = JOptionPane.showInputDialog(null, "1 - CADASTRAR  \n2 - BUSCAR \n3 - REALIZAR ALUGUEL  \n4 - VER CARROS DISPONIVEIS \n5 - BUSCAR ALUGUEIS \n6 - SAIR", "MENU", JOptionPane.INFORMATION_MESSAGE);
 
             switch (opcao) {
                 case "1":
@@ -50,6 +53,9 @@ public class Aplicacao {
                     verCarrosDisponiveis();
                     break;
                 case "5":
+                    verAlugueisPorCliente();
+                    break;
+                case "6":
                     JOptionPane.showMessageDialog(null, "Saindo do aplicativo", "SAINDO", JOptionPane.INFORMATION_MESSAGE);
                     System.exit(1);
                     break;
@@ -60,6 +66,15 @@ public class Aplicacao {
 
         }
 
+
+    }
+
+    private void verAlugueisPorCliente() {
+        String usuarioCpf = JOptionPane.showInputDialog(null, "Informe o cpf do cliente a realizar a consulta", "CONSULTA", JOptionPane.INFORMATION_MESSAGE);
+
+        Aluguel aluguel = aluguelDaoMap.buscarAluguel(Long.valueOf(usuarioCpf));
+
+        JOptionPane.showMessageDialog(null, "Aluguel: " + aluguel, "CONSULTA", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
@@ -74,7 +89,22 @@ public class Aplicacao {
     }
 
     private void realizarAluguel() {
+        String usuarioCpf = JOptionPane.showInputDialog(null, "Informe o cpf do cliente a realizar o aluguel", "ALUGUEL", JOptionPane.INFORMATION_MESSAGE);
+        Cliente cliente = null;
+        Veiculo veiculo = null;
+        if (iClienteDao.buscarT(Long.valueOf(usuarioCpf)) != null) {
+            cliente = iClienteDao.buscarT(Long.valueOf(usuarioCpf));
+        }
 
+        verCarrosDisponiveis();
+        String codigoVeiculo = JOptionPane.showInputDialog(null, "Informe o codigo do veiculo desejado", "ALUGUEL", JOptionPane.INFORMATION_MESSAGE);
+        if (iVeiculoDao.buscarT(Long.valueOf(codigoVeiculo)) != null) {
+            veiculo = iVeiculoDao.buscarT(Long.valueOf(codigoVeiculo));
+        }
+
+        String dataFinalDoAluguel = JOptionPane.showInputDialog(null, "Informe a data de devolução do veiculo (EX: 28/04/2001)", "ALUGUEL", JOptionPane.INFORMATION_MESSAGE);
+        aluguelDaoMap.realizarAluguel(cliente, veiculo, dataFinalDoAluguel);
+        JOptionPane.showMessageDialog(null, "Aluguel realizado com sucesso", "ALUGUEL", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void buscar() {
@@ -142,5 +172,25 @@ public class Aplicacao {
         String opcao = JOptionPane.showInputDialog(null, "MODELO DO CARRO - SUV, HATCH, SEDAN", "CADASTRO VEICULO", JOptionPane.INFORMATION_MESSAGE);
 
         return new Veiculo(Long.valueOf(strings.get(0)), strings.get(1), ModeloDoCarro.valueOf(opcao), strings.get(2), true);
+    }
+
+    public void teste(){
+        Cliente cliente1 = new Cliente(123L, "João Silva", "joao.silva@example.com", "11987654321", null);
+        Cliente cliente2 = new Cliente(456L, "Maria Oliveira", "maria.oliveira@example.com", "21912345678", null);
+        Cliente cliente3 = new Cliente(789L, "Carlos Souza", "carlos.souza@example.com", "31987654321", null);
+        Cliente cliente4 = new Cliente(987L, "Ana Costa", "ana.costa@example.com", "41912345678", null);
+        Cliente cliente5 = new Cliente(654L, "Pedro Rocha", "pedro.rocha@example.com", "51987654321", null);
+
+        iClienteDao.cadastrarT(cliente1);
+        iClienteDao.cadastrarT(cliente2);
+        iClienteDao.cadastrarT(cliente3);
+        iClienteDao.cadastrarT(cliente4);
+        iClienteDao.cadastrarT(cliente5);
+
+        iVeiculoDao.cadastrarT(builderDaoMap.criarSiena());
+        iVeiculoDao.cadastrarT(builderDaoMap.criarCelta());
+        iVeiculoDao.cadastrarT(builderDaoMap.criarCorsa());
+        iVeiculoDao.cadastrarT(builderDaoMap.criarUno());
+        iVeiculoDao.cadastrarT(builderDaoMap.criarSw4());
     }
 }

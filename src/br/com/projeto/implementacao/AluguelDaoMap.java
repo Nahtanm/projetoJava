@@ -18,9 +18,9 @@ public class AluguelDaoMap implements IAluguelDao {
     }
 
     @Override
-    public void realizarAluguel(Cliente cliente, Veiculo veiculo, Date dataIncial, String dataFinal) {
+    public void realizarAluguel(Cliente cliente, Veiculo veiculo, String dataFinal) {
         if (veiculo.getEstado()){
-            Aluguel aluguel = new Aluguel(veiculo, cliente, dataIncial, dataFinal);
+            Aluguel aluguel = new Aluguel(veiculo, cliente, dataFinal);
             veiculo.setEstado(false);
             this.mapAluguel.put(cliente.getCodigo(), aluguel);
         }else {
@@ -38,8 +38,4 @@ public class AluguelDaoMap implements IAluguelDao {
         }
     }
 
-    @Override
-    public Collection buscarCarrosDisponiveis() {
-        return List.of();
-    }
 }

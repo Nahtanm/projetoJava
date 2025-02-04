@@ -12,11 +12,11 @@ import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
-        Cliente cliente1 = new Cliente(12345678901L, "João Silva", "joao.silva@example.com", "11987654321", null);
-        Cliente cliente2 = new Cliente(98765432109L, "Maria Oliveira", "maria.oliveira@example.com", "21912345678", null);
-        Cliente cliente3 = new Cliente(45678912345L, "Carlos Souza", "carlos.souza@example.com", "31987654321", null);
-        Cliente cliente4 = new Cliente(32165498701L, "Ana Costa", "ana.costa@example.com", "41912345678", null);
-        Cliente cliente5 = new Cliente(65412398709L, "Pedro Rocha", "pedro.rocha@example.com", "51987654321", null);
+        Cliente cliente1 = new Cliente(123L, "João Silva", "joao.silva@example.com", "11987654321", null);
+        Cliente cliente2 = new Cliente(456L, "Maria Oliveira", "maria.oliveira@example.com", "21912345678", null);
+        Cliente cliente3 = new Cliente(789L, "Carlos Souza", "carlos.souza@example.com", "31987654321", null);
+        Cliente cliente4 = new Cliente(987L, "Ana Costa", "ana.costa@example.com", "41912345678", null);
+        Cliente cliente5 = new Cliente(654L, "Pedro Rocha", "pedro.rocha@example.com", "51987654321", null);
 
         IClienteDao iClienteDao = new ClienteDaoMap();
         IVeiculoDao iVeiculoDao = new VeiculoDaoMap();
@@ -48,7 +48,7 @@ public class Main {
 
         IAluguelDao iAluguelDao = new AluguelDaoMap();
 
-        iAluguelDao.realizarAluguel(cliente1, iVeiculoDao.buscarT(1l), new Date(), "05/02/2025");
+        iAluguelDao.realizarAluguel(cliente1, iVeiculoDao.buscarT(1l), "05/02/2025");
 
         System.out.println(iAluguelDao.buscarAluguel(cliente1.getCodigo()));
         System.out.println(iVeiculoDao.buscarT(1l));

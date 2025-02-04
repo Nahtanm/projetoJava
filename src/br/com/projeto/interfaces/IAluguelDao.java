@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Date;
 
 public interface IAluguelDao {
-    void realizarAluguel(Cliente cliente, Veiculo veiculo, Date dataIncial, String dataFinal);
+    void realizarAluguel(Cliente cliente, Veiculo veiculo, String dataFinal);
     Aluguel buscarAluguel(Long id);
-    Collection buscarCarrosDisponiveis();
 }

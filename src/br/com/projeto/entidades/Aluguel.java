@@ -13,10 +13,10 @@ public class Aluguel {
     private Date dataFinal;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Aluguel(Veiculo veiculo, Cliente cliente, Date dataInicial, String dataFinal) {
+    public Aluguel(Veiculo veiculo, Cliente cliente, String dataFinal) {
         this.veiculo = veiculo;
         this.cliente = cliente;
-        this.dataInicial = dataInicial;
+        this.dataInicial = new Date();
         try {
             this.dataFinal = simpleDateFormat.parse(dataFinal);
         } catch (ParseException e) {
